@@ -5,7 +5,7 @@ networks:
 services:
   keystore-kibana:
     image: docker.elastic.co/kibana/kibana:8.15.2
-    command: bash /setup/setup-kibana.sh
+    command: bash /setup/setup-kibana_keys.sh
     user: "0"
     volumes:
       - ./secrets:/secrets

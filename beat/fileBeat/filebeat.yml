@@ -13,4 +13,4 @@ filebeat.inputs:
 
 
 output.logstash:
-  hosts: ["logstash.lptdevops.website"]
+  hosts: ["http://192.168.224.130:5044"]
