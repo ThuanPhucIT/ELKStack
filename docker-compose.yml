@@ -1,0 +1,76 @@
+networks:
+  PrviNetwork:
+    external: true
+
+volumes:
+  elasticsearch-data:
+
+secrets:
+  elasticsearch.keystore:
+    file: ./secrets/keystore/elasticsearch.keystore
+  elasticsearch.service_tokens:
+    file: ./secrets/service_tokens
+  kibana.keystore:
+    file: ./secrets/keystore/kibana.keystore
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
+    restart: always
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_CLUSTER_NAME: ${CLUSTER_NAME}
+      ELASTIC_NODE_NAME: ${NODE_NAME}
+      ELASTICSEARCH_PORT: ${ES_PORT}
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+    secrets:
+      - source: elasticsearch.keystore
+        target: /usr/share/elasticsearch/config/elasticsearch.keystore
+      - source: elasticsearch.service_tokens
+        target: /usr/share/elasticsearch/config/service_tokens
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - PrviNetwork
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.2
+    restart: always
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: ${ELASTICSEARCH_HOST_PORT}
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    networks:
+      - PrviNetwork
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.2
+    restart: always
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
+    secrets:
+      - source: kibana.keystore
+        target: /usr/share/kibana/config/kibana.keystore
+    environment:
+      ELASTICSEARCH_HOST_PORT: ${ELASTICSEARCH_HOST_PORT}
+      KIBANA_PORT: 5601
+    env_file:
+      - ./secrets/.env.kibana.token
+    ports:
+      - "5601:5601"
+    networks:
+      - PrviNetwork

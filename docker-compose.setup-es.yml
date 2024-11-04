@@ -1,0 +1,17 @@
+networks:
+  PrviNetwork:
+    external: true
+
+services:
+  keystore-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
+    command: bash /setup/setup-es_keys.sh
+    user: "0"
+    volumes:
+      - ./secrets:/secrets
+      - ./setup/:/setup
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+    networks:
+      - PrviNetwork
+

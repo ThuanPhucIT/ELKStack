@@ -1,0 +1,16 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /var/lib/docker/containers/*/*-json.log 
+    fields:
+        log_type: "docker-log"
+  
+  - type: log
+    paths:
+      - /var/log/auth.log 
+    fields:
+        log_type: "auth-log"
+
+
+output.logstash:
+  hosts: ["logstash.lptdevops.website"]

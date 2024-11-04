@@ -1,0 +1,11 @@
+cluster.name: ${ELASTIC_CLUSTER_NAME}
+node.name:    ${ELASTIC_NODE_NAME}
+network.host: 0.0.0.0
+transport.host: 0.0.0.0
+http.port: ${ELASTICSEARCH_PORT}
+discovery.type: single-node
+
+xpack.license.self_generated.type: basic
+
+xpack.security.enabled: true
+xpack.security.enrollment.enabled: true
