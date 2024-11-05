@@ -87,5 +87,8 @@ services:
       - ./secrets/.env.kibana.token
     ports:
       - "5601:5601"
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
     networks:
       - PrviNetwork

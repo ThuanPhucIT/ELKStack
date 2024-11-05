@@ -17,6 +17,9 @@ Mở file cấu hình .env để tùy chỉnh
    - Cập nhật IP "192.168.224.130" thành IP của máy hiện tại
    - Thay đổi mật khẩu cho ELASTIC_PASSWORD và KIBANA_PASSWORD (nếu muốn)
 
+- Trong file instances.yml:
+   - Cập nhật IP "192.168.224.130" thành IP của máy hiện tại
+
 Tạo network Docker để kết nối các container
 - docker network create PrviNetwork
 
@@ -32,12 +35,12 @@ Cài đặt và khởi động Elasticsearch, Kibana, và Logstash
 Chờ vài phút để Elasticsearch khởi động xong
 
 Mở trình duyệt và kiểm tra truy cập Elasticsearch tại địa chỉ:
-# http://<IP-của-bạn>:9200/ 
+- http://<IP-của-bạn>:9200/ 
 - Tên đăng nhập: elastic
 - Mật khẩu: 035714
 
 Mở Kibana trên trình duyệt tại địa chỉ:
-# http://<IP-của-bạn>:5601/
+ - http://<IP-của-bạn>:5601/
  - Tên đăng nhập: elastic
  - Mật khẩu: 035714
 

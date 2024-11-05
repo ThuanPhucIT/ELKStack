@@ -4,3 +4,4 @@ server.port: ${KIBANA_PORT}
 
 elasticsearch.hosts: [ "${ELASTICSEARCH_HOST_PORT}" ]
 elasticsearch.serviceAccountToken: "${KIBANA_SERVICE_ACCOUNT_TOKEN}"
+elasticsearch.ssl.certificateAuthorities: [ "/certs/ca.crt" ]
