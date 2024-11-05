@@ -1,0 +1,4 @@
+instances:
+  - name: elasticsearch
+    ip: ["192.168.224.130"]
+

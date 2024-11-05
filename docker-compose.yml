@@ -12,6 +12,12 @@ secrets:
     file: ./secrets/service_tokens
   kibana.keystore:
     file: ./secrets/keystore/kibana.keystore
+  elastic.ca:
+    file: ./secrets/certs/ca/ca.crt
+  elasticsearch.certificate:
+    file: ./secrets/certs/elasticsearch/elasticsearch.crt
+  elasticsearch.key:
+    file: ./secrets/certs/elasticsearch/elasticsearch.key
 
 services:
   elasticsearch:
@@ -34,6 +40,12 @@ services:
         target: /usr/share/elasticsearch/config/elasticsearch.keystore
       - source: elasticsearch.service_tokens
         target: /usr/share/elasticsearch/config/service_tokens
+      - source: elastic.ca
+        target: /usr/share/elasticsearch/config/certs/ca.crt
+      - source: elasticsearch.certificate
+        target: /usr/share/elasticsearch/config/certs/elasticsearch.crt
+      - source: elasticsearch.key
+        target: /usr/share/elasticsearch/config/certs/elasticsearch.key
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -54,6 +66,9 @@ services:
     ports:
       - "5044:5044"
       - "9600:9600"
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
     networks:
       - PrviNetwork
 
