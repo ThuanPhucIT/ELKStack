@@ -1,0 +1,28 @@
+version: "3.5"
+
+volumes:
+  filebeat-data:
+
+secrets:
+  elastic.ca:
+    file: ./secrets/certs/ca/ca.crt
+
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:{VERSION}
+    restart: always
+    command: -e --strict.perms=false
+    user: root
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      LOGSTASH_HOST_PORT: ${LOGSTASH_HOST_PORT}
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
+    volumes:
+      - ./beat/fileBeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat-data:/var/lib/filebeat/data
+      - /var/log/:/var/log/:ro

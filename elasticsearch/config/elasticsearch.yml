@@ -5,7 +5,7 @@ transport.host: 0.0.0.0
 http.port: ${ELASTICSEARCH_PORT}
 discovery.type: single-node
 
-xpack.license.self_generated.type: basic
+xpack.license.self_generated.type: ${LICENSE}
 
 xpack.security.enabled: true
 xpack.security.enrollment.enabled: true

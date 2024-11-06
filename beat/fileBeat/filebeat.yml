@@ -11,6 +11,7 @@ filebeat.inputs:
     fields:
         log_type: "auth-log"
 
-
 output.logstash:
-  hosts: ["http://192.168.224.130:5044"]
+  hosts: [${LOGSTASH_HOST_PORT}]
+  ssl.enabled: true
+  ssl.certificate_authorities: ["/certs/ca.crt"]

@@ -18,10 +18,14 @@ secrets:
     file: ./secrets/certs/elasticsearch/elasticsearch.crt
   elasticsearch.key:
     file: ./secrets/certs/elasticsearch/elasticsearch.key
+  logstash.certificate:
+    file: ./secrets/certs/logstash/logstash.crt
+  logstash.key:
+    file: ./secrets/certs/logstash/logstash.key
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
     restart: always
     environment:
       ELASTIC_USERNAME: ${ELASTIC_USERNAME}
@@ -29,6 +33,7 @@ services:
       ELASTIC_CLUSTER_NAME: ${CLUSTER_NAME}
       ELASTIC_NODE_NAME: ${NODE_NAME}
       ELASTICSEARCH_PORT: ${ES_PORT}
+      LICENSE: ${LICENSE}
       LS_JAVA_OPTS: -Xms256m -Xmx256m
 
     volumes:
@@ -53,7 +58,7 @@ services:
       - PrviNetwork
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.2
+    image: docker.elastic.co/logstash/logstash:${VERSION}
     restart: always
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
@@ -69,11 +74,15 @@ services:
     secrets:
       - source: elastic.ca
         target: /certs/ca.crt
+      - source: logstash.certificate
+        target: /usr/share/logstash/config/certs/logstash.crt
+      - source: elasticsearch.key
+        target: /usr/share/logstash/config/certs/logstash.key
     networks:
       - PrviNetwork
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.2
+    image: docker.elastic.co/kibana/kibana:${VERSION}
     restart: always
     volumes:
       - ./kibana/config/:/usr/share/kibana/config
