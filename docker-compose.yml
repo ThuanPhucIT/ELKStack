@@ -35,7 +35,6 @@ services:
       ELASTICSEARCH_PORT: ${ES_PORT}
       LICENSE: ${LICENSE}
       LS_JAVA_OPTS: -Xms256m -Xmx256m
-
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
@@ -75,11 +74,13 @@ services:
       - source: elastic.ca
         target: /certs/ca.crt
       - source: logstash.certificate
-        target: /usr/share/logstash/config/certs/logstash.crt
-      - source: elasticsearch.key
-        target: /usr/share/logstash/config/certs/logstash.key
+        target: /certs/logstash.crt
+      - source: logstash.key
+        target: /certs/logstash.key
     networks:
       - PrviNetwork
+    depends_on:
+      - elasticsearch
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${VERSION}
@@ -89,6 +90,8 @@ services:
     secrets:
       - source: kibana.keystore
         target: /usr/share/kibana/config/kibana.keystore
+      - source: elastic.ca
+        target: /certs/ca.crt
     environment:
       ELASTICSEARCH_HOST_PORT: ${ELASTICSEARCH_HOST_PORT}
       KIBANA_PORT: 5601
@@ -96,8 +99,7 @@ services:
       - ./secrets/.env.kibana.token
     ports:
       - "5601:5601"
-    secrets:
-      - source: elastic.ca
-        target: /certs/ca.crt
     networks:
       - PrviNetwork
+    depends_on:
+      - elasticsearch

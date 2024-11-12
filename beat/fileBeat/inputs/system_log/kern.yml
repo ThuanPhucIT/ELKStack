@@ -1,0 +1,6 @@
+- type: log
+  enabled: true
+  paths:
+    - /var/log/kern.log
+  fields:
+   beats_output: nginx

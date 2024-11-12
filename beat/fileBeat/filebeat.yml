@@ -1,17 +1,9 @@
 filebeat.inputs:
-  - type: log
-    paths:
-      - /var/lib/docker/containers/*/*-json.log 
-    fields:
-        log_type: "docker-log"
+
+filebeat.config.inputs:
+  path: ./inputs/*/*.yml
   
-  - type: log
-    paths:
-      - /var/log/auth.log 
-    fields:
-        log_type: "auth-log"
 
 output.logstash:
   hosts: [${LOGSTASH_HOST_PORT}]
-  ssl.enabled: true
-  ssl.certificate_authorities: ["/certs/ca.crt"]
+
